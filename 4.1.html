@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TV Series Search</title>
+</head>
+<body>
+  <h1>Search for a TV Series</h1>
+  <form id="search-form">
+    <input id="query" name="q" type="text" placeholder="Enter TV show name" required>
+    <input type="submit" value="Search">
+  </form>
+
+  <div id="results"></div>
+
+  <script>
+    // Add event listener to the form
+    document.getElementById('search-form').addEventListener('submit', async function (event) {
+      event.preventDefault(); // Prevent default form submission
+
+      const query = document.getElementById('query').value; // Get the input value
+      const apiUrl = `https://api.tvmaze.com/search/shows?q=${encodeURIComponent(query)}`; // TVMaze API URL
+
+      try {
+        const response = await fetch(apiUrl); // Fetch data from API
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const data = await response.json(); // Parse the JSON response
+        console.log('TV Series Data:', data); // Log the data to the console
+
+        // Display the results in a user-friendly way (optional)
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = ''; // Clear previous results
+        if (data.length > 0) {
+          data.forEach(show => {
+            const showInfo = document.createElement('div');
+            showInfo.innerHTML = `
+              <h2>${show.show.name}</h2>
+              <p><strong>Genres:</strong> ${show.show.genres.join(', ')}</p>
+              <p><strong>Summary:</strong> ${show.show.summary || 'No summary available'}</p>
+              <hr>
+            `;
+            resultsDiv.appendChild(showInfo);
+          });
+        } else {
+          resultsDiv.innerHTML = '<p>No results found.</p>';
+        }
+      } catch (error) {
+        console.error('Error fetching TV series data:', error);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+// Function to fetch TV show data and display it dynamically on the webpage
+function searchTVShow(query) {
+  // Ensure the query is not empty
+  if (!query) {
+    console.log("Please enter a search term.");
+    return;
+  }
+
+  // Fetch data from the TVMaze API using the query
+  fetch(`https://api.tvmaze.com/search/shows?q=${encodeURIComponent(query)}`)
+    .then(response => {
+      // Check if the response is okay (status 200)
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      return response.json();  // Parse the JSON data from the response
+    })
+    .then(data => {
+      displayResults(data);  // Display the results on the webpage
+    })
+    .catch(error => {
+      // If an error occurs, log it to the console
+      console.error("An error occurred while fetching the data:", error);
+    });
+}
+
+// Function to display the search results on the webpage
+function displayResults(data) {
+  const resultsContainer = document.getElementById('results');
+  
+  // Clear previous results
+  resultsContainer.innerHTML = '';
+
+  // If no results are found, log that to the console and show message on the page
+  if (data.length === 0) {
+    resultsContainer.innerHTML = '<p>No results found.</p>';
+    return;
+  }
+
+  // Loop through the results and create HTML elements to display the show details
+  data.forEach(item => {
+    const show = item.show;
+
+    // Create a new article element for each TV show
+    const article = document.createElement('article');
+    article.style.border = '1px solid #ccc';
+    article.style.padding = '10px';
+    article.style.margin = '10px 0';
+    
+    // Add content to the article
+    article.innerHTML = `
+      <h2>${show.name || 'N/A'}</h2>
+      <a href="${show.url}" target="_blank">${show.url}</a>
+      <img src="${show.image?.medium || 'https://via.placeholder.com/210x295?text=No+Image+Available'}" alt="${show.name || 'No name'}" />
+      <div>${show.summary ? show.summary.replace(/<[^>]+>/g, '') : 'No summary available'}</div>
+    `;
+
+    // Append the article to the results container
+    resultsContainer.appendChild(article);
+  });
+}
+
+// Example usage: Search for a TV show (you can replace 'Breaking Bad' with any TV show)
+searchTVShow('Breaking Bad');

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Route Finder</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <style>
+    #map {
+      height: 500px;
+      margin-top: 20px;
+    }
+    #results {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Find Your Route to School (Karaportti 2)</h1>
+
+  <!-- Form for user input -->
+  <form id="routeForm">
+    <label for="address">Enter your address:</label>
+    <input type="text" id="address" required placeholder="Enter an address" />
+    <button type="submit">Find Route</button>
+  </form>
+
+  <!-- Map container -->
+  <div id="map"></div>
+
+  <!-- Results container for trip details -->
+  <div id="results"></div>
+
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="4.7.js"></script>
+</body>
+</html>
